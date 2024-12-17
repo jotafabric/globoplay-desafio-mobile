@@ -30,7 +30,11 @@ struct HomeView: View {
                                         DetailsView(movieId: item.id)
                                     } label: {
                                         if let url = item.backdropURL {
-                                            ImageCard(backdropURL: url)
+                                            ImageCard(
+                                                backdropURL: url,
+                                                width: 170,
+                                                height: 220
+                                            )
                                         }
                                     }
                                 }

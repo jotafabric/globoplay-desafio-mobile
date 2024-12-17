@@ -9,6 +9,8 @@ import SwiftUI
 
 public struct ImageCard: View {
     let backdropURL: URL
+    let width: CGFloat
+    let height: CGFloat
     
     public var body: some View {
         ZStack(alignment: .bottom) {
@@ -16,14 +18,14 @@ public struct ImageCard: View {
                 image
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 170, height: 220)
+                    .frame(width: width, height: height)
                     .clipped()
             } placeholder: {
                 Rectangle().fill(.gray)
-                    .frame(width: 170, height: 220)
+                    .frame(width: width, height: height)
             }
         }
-        .frame(width: 170, height: 220)
+        .frame(width: width, height: height)
         .shadow(radius: 5)
     }
 }

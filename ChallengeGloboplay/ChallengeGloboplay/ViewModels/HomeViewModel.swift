@@ -17,10 +17,9 @@ class HomeViewModel: ObservableObject {
         let request = APIRequest(
             endpoint: "https://api.themoviedb.org/3/movie/popular",
             headers: [
-                "Authorization" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMWM5MGRkNmZiYjJjYzAwZDcxODBlZWYyMzZiZDhiOSIsIm5iZiI6MTczNDM3NDA4Ny4zNjUsInN1YiI6IjY3NjA3MmM3MjA3YjQ3OTkxOTQ1MzE4MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rHERpfbKp18LUhKQWp95ATz8KDDBahm-L62us7wBGE4"
+                "Authorization" :  NSLocalizedString("auth", comment: "")
             ],
             parameters: [
-                "language": "pt-BR",
                 "page": "1"
             ]
         )
@@ -43,7 +42,7 @@ class HomeViewModel: ObservableObject {
         let request = APIRequest(
             endpoint: "https://api.themoviedb.org/3/tv/popular",
             headers: [
-                "Authorization" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMWM5MGRkNmZiYjJjYzAwZDcxODBlZWYyMzZiZDhiOSIsIm5iZiI6MTczNDM3NDA4Ny4zNjUsInN1YiI6IjY3NjA3MmM3MjA3YjQ3OTkxOTQ1MzE4MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rHERpfbKp18LUhKQWp95ATz8KDDBahm-L62us7wBGE4"
+                "Authorization" :  NSLocalizedString("auth", comment: "")
             ],
             parameters: [
                 "language": "pt-BR",

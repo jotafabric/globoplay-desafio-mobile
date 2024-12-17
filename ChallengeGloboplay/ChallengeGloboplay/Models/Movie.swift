@@ -15,10 +15,28 @@ struct MoviesResponse: Codable {
 struct Movie: Identifiable, Codable, Equatable {
     let id: Int
     let title: String
+    let backdropPath: String?
+    
+    var backdropURL: URL? {
+        let baseURL = URL(string: "https://image.tmdb.org/t/p/w300")!
+        guard let backdropPath else { return nil }
+        return baseURL.appending(path: backdropPath)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case backdropPath = "backdrop_path"
+        case id, title
+    }
+}
+
+struct MovieDetails: Identifiable, Codable, Equatable {
+    let id: Int
+    let title: String
     let posterPath: String?
     let backdropPath: String?
     let overview: String
     let releaseDate: String
+    let tagline: String
     
     var backdropURL: URL? {
         let baseURL = URL(string: "https://image.tmdb.org/t/p/w300")!
@@ -36,6 +54,6 @@ struct Movie: Identifiable, Codable, Equatable {
         case backdropPath = "backdrop_path"
         case posterPath = "poster_path"
         case releaseDate = "release_date"
-        case id, title, overview
+        case id, title, overview, tagline
     }
 }

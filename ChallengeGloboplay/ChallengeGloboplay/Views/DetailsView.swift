@@ -15,7 +15,7 @@ struct DetailsView: View {
         ZStack {
             if viewModel.isLoading {
                 ProgressView("Carregando...")
-            } else if let movie = viewModel.movie {
+            } else if let movie = viewModel.movieDetails {
                 VStack {
                     AsyncImage(url: movie.backdropURL) { image in
                         image
@@ -32,7 +32,11 @@ struct DetailsView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         if let url = movie.backdropURL {
-                            ImageCard(backdropURL: url)
+                            ImageCard(
+                                backdropURL: url,
+                                width: 170,
+                                height: 220
+                            )
                         }
                         
                         Text(movie.title)
@@ -41,7 +45,7 @@ struct DetailsView: View {
                             .fontWeight(.heavy)
                             .padding(.top, 8)
                         
-                        Text(movie.overview)
+                        Text(movie.tagline)
                             .foregroundColor(Color.detailtColor)
                             .padding(.horizontal, 16)
                             .lineLimit(3)
@@ -62,7 +66,8 @@ struct DetailsView: View {
                                 .cornerRadius(8)
                             }
                             Button(action: {
-                                //TODO
+                               //TODO
+                                print("MovieID: \(movieId)")
                             }) {
                                 HStack {
                                     Image(systemName: "star.fill")
@@ -111,11 +116,11 @@ struct DetailsView: View {
             }
         }
         .onAppear{
-            viewModel.getMovie(from: movieId) { result in
+            viewModel.getMovie(from: movieId) {result in
                 DispatchQueue.main.async {
                     switch result {
-                    case .success(let movie):
-                        self.viewModel.movie = movie
+                    case .success(let movieDetails):
+                        self.viewModel.movieDetails = movieDetails
                     case .failure(let error):
                         print("Erro: \(error.localizedDescription)")
                     }

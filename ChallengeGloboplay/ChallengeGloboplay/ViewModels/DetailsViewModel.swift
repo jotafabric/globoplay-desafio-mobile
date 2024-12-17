@@ -8,32 +8,64 @@
 import SwiftUI
 
 class DetailsViewModel: ObservableObject {
-    @Published var movie: Movie?
+    @Published var movieDetails: MovieDetails?
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    func getMovie(from id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
-        let request = APIRequest(
-            endpoint: "https://api.themoviedb.org/3/movie/\(id)",
-            headers: [
-                "Authorization" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMWM5MGRkNmZiYjJjYzAwZDcxODBlZWYyMzZiZDhiOSIsIm5iZiI6MTczNDM3NDA4Ny4zNjUsInN1YiI6IjY3NjA3MmM3MjA3YjQ3OTkxOTQ1MzE4MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rHERpfbKp18LUhKQWp95ATz8KDDBahm-L62us7wBGE4"
-            ],
-            parameters: [
-                "language": "pt-BR"
-            ]
-        )
+    func getMovie(from id: Int, completion: @escaping (Result<MovieDetails, Error>) -> Void) {
+        let url = URL(string: "https://api.themoviedb.org/3/movie/\(id)")!
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
+        let queryItems: [URLQueryItem] = [
+          URLQueryItem(name: "language", value: "pt-BR"),
+        ]
+        components.queryItems = components.queryItems.map { $0 + queryItems } ?? queryItems
+
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 10
+        request.allHTTPHeaderFields = [
+          "accept": "application/json",
+          "Authorization":  NSLocalizedString("auth", comment: "")
+        ]
 
         Task {
             do {
-                let response: Movie = try await NetworkManager.shared.sendRequest(
-                    request,
-                    responseType: Movie.self
-                )
-                completion(.success(response))
+                let (data, _) = try await URLSession.shared.data(for: request)
+                let movie = try JSONDecoder().decode(MovieDetails.self, from: data)
+                
+                completion(.success(movie))
             } catch {
                 print(error.localizedDescription)
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func addFavorite(id: Int, completion: @escaping (Result<Bool, Error>) -> Void) async {
+        let parameters = [
+          "media_type": "movie",
+          "media_id": id,
+          "favorite": true
+        ] as [String : Any?]
+
+        do {
+            let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
+            
+            let url = URL(string: "https://api.themoviedb.org/3/account/21691755/favorite")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.timeoutInterval = 10
+            request.allHTTPHeaderFields = [
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization":  NSLocalizedString("auth", comment: "")
+            ]
+            request.httpBody = postData
+            let (_, _) = try await URLSession.shared.data(for: request)
+            completion(.success(true))
+        } catch {
+            print(error.localizedDescription)
+            completion(.failure(error))
         }
     }
 }
