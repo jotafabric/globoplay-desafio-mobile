@@ -40,32 +40,4 @@ class DetailsViewModel: ObservableObject {
             }
         }
     }
-    
-    func addFavorite(id: Int, completion: @escaping (Result<Bool, Error>) -> Void) async {
-        let parameters = [
-          "media_type": "movie",
-          "media_id": id,
-          "favorite": true
-        ] as [String : Any?]
-
-        do {
-            let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
-            
-            let url = URL(string: "https://api.themoviedb.org/3/account/21691755/favorite")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.timeoutInterval = 10
-            request.allHTTPHeaderFields = [
-                "accept": "application/json",
-                "content-type": "application/json",
-                "Authorization":  NSLocalizedString("auth", comment: "")
-            ]
-            request.httpBody = postData
-            let (_, _) = try await URLSession.shared.data(for: request)
-            completion(.success(true))
-        } catch {
-            print(error.localizedDescription)
-            completion(.failure(error))
-        }
-    }
 }
