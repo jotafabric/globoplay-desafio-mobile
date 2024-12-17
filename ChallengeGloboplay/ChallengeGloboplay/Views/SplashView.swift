@@ -12,7 +12,7 @@ struct SplashView: View {
     
     var body: some View {
         if isActive {
-              //TODO: HomeView()
+            AppTabView()
         } else {
             ZStack {
                 Image("splash")
